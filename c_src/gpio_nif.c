@@ -61,9 +61,6 @@ static ERL_NIF_TERM am_wait;
 
 static ERL_NIF_TERM am_undefined;
 
-static ERL_NIF_TERM am_true;
-static ERL_NIF_TERM am_false;
-
 static ERL_NIF_TERM am_name;
 static ERL_NIF_TERM am_label;
 static ERL_NIF_TERM am_lines;
@@ -656,9 +653,6 @@ static int on_load(ErlNifEnv *env, void** priv_data, ERL_NIF_TERM load_info)
     am_wait = enif_make_atom(env, "wait");
 
     am_undefined = enif_make_atom(env, "undefined");
-
-    am_true = enif_make_atom(env, "true");
-    am_false = enif_make_atom(env, "false");
 
     am_name = enif_make_atom(env, "name");
     am_label = enif_make_atom(env, "label");
