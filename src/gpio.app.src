@@ -1,0 +1,13 @@
+{application, gpio, [
+    {description, "Erlang GPIO interface"},
+    {vsn, "git"},
+    {applications, [
+        kernel,
+        stdlib
+    ]},
+    {env,[]},
+    {modules, []},
+
+    {licenses, ["Apache 2.0"]},
+    {links, []}
+ ]}.
