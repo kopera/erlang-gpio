@@ -156,13 +156,18 @@ read_line_events_nif(_LineEvents, _Ref) ->
 
 -spec close_line_events(line_events()) -> ok | {error, term()}.
 close_line_events({LineEvents, Receiver}) ->
-    Receiver ! {close, self(), LineEvents},
-    receive
-        {closed, LineEvents} ->
-            ok
-    after
-        5000 ->
-            exit(timeout)
+    case is_process_alive(Receiver) of
+        true ->
+            Receiver ! {close, self(), LineEvents},
+            receive
+                {closed, LineEvents} ->
+                    ok
+            after
+                5000 ->
+                    exit(timeout)
+            end;
+        false ->
+            {error, closed}
     end.
 
 
