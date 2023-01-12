@@ -1,6 +1,6 @@
 {application, gpio, [
     {description, "Erlang GPIO interface"},
-    {vsn, "0.6.0"},
+    {vsn, git},
     {applications, [
         kernel,
         stdlib
