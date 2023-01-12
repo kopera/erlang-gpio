@@ -354,11 +354,11 @@ static ERL_NIF_TERM gpio_nif_open_lines(ErlNifEnv* env, int argc, const ERL_NIF_
         ERL_NIF_TERM rest;
         unsigned int i = 0;
         while (enif_get_list_cell(env, offsets_list, &offset, &rest)) {
-            unsigned int offset;
-            if (!enif_get_uint(env, offset, &offset)) {
+            unsigned int offset_value;
+            if (!enif_get_uint(env, offset, &offset_value)) {
                 return enif_make_badarg(env);
             }
-            req.lineoffsets[i] = offset;
+            req.lineoffsets[i] = offset_value;
 
             i++;
             offsets_list = rest;
@@ -392,11 +392,11 @@ static ERL_NIF_TERM gpio_nif_open_lines(ErlNifEnv* env, int argc, const ERL_NIF_
         ERL_NIF_TERM rest;
         unsigned int i = 0;
         while (enif_get_list_cell(env, defaults_list, &default_, &rest)) {
-            unsigned int active;
-            if (!enif_get_uint(env, default_, &active)) {
+            unsigned int default_value;
+            if (!enif_get_uint(env, default_, &default_value)) {
                 return enif_make_badarg(env);
             }
-            req.default_values[i] = active != 0;
+            req.default_values[i] = default_value != 0;
 
             i++;
             defaults_list = rest;
