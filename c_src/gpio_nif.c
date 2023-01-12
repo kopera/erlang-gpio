@@ -25,8 +25,8 @@ typedef struct {
 
     int                     fd;
     bool                    open;
-    char                    name[32];
-    char                    label[32];
+    char                    name[GPIO_MAX_NAME_SIZE];
+    char                    label[GPIO_MAX_NAME_SIZE];
     unsigned int            lines;
 } gpio_nif_chip_resource_t;
 
@@ -340,7 +340,7 @@ static ERL_NIF_TERM gpio_nif_open_lines(ErlNifEnv* env, int argc, const ERL_NIF_
         return enif_make_badarg(env);
     }
 
-    char consumer_label[32] = {0};
+    char consumer_label[GPIO_MAX_NAME_SIZE] = {0};
     if (!enif_get_string(env, argv[4], consumer_label, sizeof(consumer_label), ERL_NIF_LATIN1)) {
         return enif_make_badarg(env);
     }
@@ -517,7 +517,7 @@ static ERL_NIF_TERM gpio_nif_open_line_events(ErlNifEnv* env, int argc, const ER
         return enif_make_badarg(env);
     }
 
-    char consumer_label[32] = {0};
+    char consumer_label[GPIO_MAX_NAME_SIZE] = {0};
     if (!enif_get_string(env, argv[4], consumer_label, sizeof(consumer_label), ERL_NIF_LATIN1)) {
         return enif_make_badarg(env);
     }
