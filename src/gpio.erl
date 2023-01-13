@@ -23,6 +23,18 @@
 -on_load(init/0).
 
 
+%% @doc Open a GPIO chip given its full path.The path should normally look like
+%% "/dev/gpiochipX".
+%% 
+%% Once a chip is open, it can be used to query its info using {@link chip_info/1},
+%% open lines for reading/writing using {@link open_lines/5} or
+%% monitor lines for input events using {@link open_line_events/5}.
+%% 
+%% The handle to the GPIO chip is automatically closed when the process who
+%% opened it terminates, it can also be closed explicitely using {@link close_chip/1}.
+%%
+%% @param Path to the gpiochip character device file.
+%% @returns a handle to use the GPIO chip in case of success.
 -spec open_chip(Path) -> {ok, chip()} | {error, term()} when
     Path :: file:filename_all().
 -opaque chip() :: reference().
