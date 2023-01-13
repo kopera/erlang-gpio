@@ -12,7 +12,7 @@ You need to add `gpio` as a dependency to your project. If you are using
 
 ```erlang
 {deps, [
-    {gpio, "0.1.0"}
+    {gpio, "0.6.0"}
 ]}.
 ```
 
@@ -49,7 +49,7 @@ to monitor a line.
 ## Opening gpio lines
 The following will open a single line `IO1` from the previously open
 chip (typically this would be `GPIO3_IO1`). The opened line is configured as an
-outpur with a default value of `0`. The last parameter is used to communicate
+output with a default value of `0`. The last parameter is used to communicate
 to the kernel a description of the chip use. If `debugfs` is enabled, this
 information is visible in `/sys/kernel/debug/gpio`.
 
