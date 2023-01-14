@@ -23,18 +23,18 @@
 -on_load(init/0).
 
 
-%% @doc Open a GPIO chip given its full path.The path should normally look like
+%% @doc Open a GPIO chip given its full path. The path should normally look like
 %% "/dev/gpiochipX".
-%% 
+%%
 %% Once a chip is open, it can be used to query its info using {@link chip_info/1},
 %% open lines for reading/writing using {@link open_lines/5} or
 %% monitor lines for input events using {@link open_line_events/5}.
-%% 
-%% The handle to the GPIO chip is automatically closed when the process who
-%% opened it terminates, it can also be closed explicitely using {@link close_chip/1}.
 %%
-%% @param Path to the gpiochip character device file.
-%% @returns a handle to use the GPIO chip in case of success.
+%% The {@link chip(). handle} to the GPIO chip is automatically closed when the
+%% process that opened it terminates, it can also be closed explicitely
+%% using {@link close_chip/1}.
+%%
+%% Returns a {@link chip(). handle} to use the GPIO chip in case of success.
 -spec open_chip(Path) -> {ok, chip()} | {error, term()} when
     Path :: file:filename_all().
 -opaque chip() :: reference().
@@ -47,6 +47,8 @@ open_chip_nif(_Path) ->
     erlang:nif_error(not_loaded).
 
 
+%% @doc Return information about the open GPIO chip. This includes the name,
+%% label and number of available lines.
 -spec chip_info(chip()) -> {ok, chip_info()} | {error, term()}.
 -type chip_info() :: #{
     name := string(),
@@ -62,6 +64,7 @@ chip_info_nif(_Chip) ->
     erlang:nif_error(not_loaded).
 
 
+%% @doc Close a previously open GPIO chip.
 -spec close_chip(chip()) -> ok | {error, term()}.
 close_chip(Chip) ->
     close_chip_nif(Chip).
@@ -72,6 +75,24 @@ close_chip_nif(_Chip) ->
     erlang:nif_error(not_loaded).
 
 
+%% @doc Open a set of lines for reading/writing.
+%%
+%% The lines to be opened are specified through the `Offsets' parameter, for
+%% example to open the 16th, 20th and 21st lines Offsets would be `[16, 20, 21]'.
+%% these offsets are board and system specific, make sure to consult the
+%% documentation of the system to avoid damages.
+%%
+%% The `Flags' allow specifying the pin direction, the active state as well as
+%% the drive mode.
+%%
+%% The `Defaults' parameter specifies the default pin values. The length of this
+%% list must be equal to the length of the `Offsets` list.
+%% 
+%% The `ConsumerLabel' should be an ASCII string of the application name. This
+%% string will be truncated to 31 characters.
+%% 
+%% Returns a {@link lines(). handle} to read from using {@link read_lines/1}; or
+%% write to using {@link write_lines/2}; the opened lines in case of success.
 -spec open_lines(chip(), [Offset], [Flag], [Default], ConsumerLabel) -> {ok, lines()} | {error, term()} when
     Offset :: non_neg_integer(),
     Flag :: input | output | active_low | open_drain | open_source,
@@ -87,6 +108,10 @@ open_lines_nif(_Chip, _Offsets, _Flags, _Defaults, _ConsumerLabel) ->
     erlang:nif_error(not_loaded).
 
 
+%% @doc Read the current value of a set of opened lines.
+%%
+%% Returns a tuple of `0' and `1' values. The tuple size is equal to the number
+%% of lines opened using {@link open_lines/5}.
 -spec read_lines(lines()) -> {ok, tuple()} | {error, term()}.
 read_lines(Lines) ->
     read_lines_nif(Lines).
@@ -97,6 +122,10 @@ read_lines_nif(_Lines) ->
     erlang:nif_error(not_loaded).
 
 
+%% @doc Set the current value of a set of opened lines.
+%%
+%% The `Values' tuple must consiste of `0' and `1' values and its size must be
+%% equal to the number of lines opened using {@link open_lines/5}.
 -spec write_lines(lines(), tuple()) -> ok | {error, term()}.
 write_lines(Lines, Values) ->
     write_lines_nif(Lines, Values).
@@ -107,6 +136,7 @@ write_lines_nif(_Lines, _Values) ->
     erlang:nif_error(not_loaded).
 
 
+%% @doc Close a previously opened lines.
 -spec close_lines(lines()) -> ok | {error, term()}.
 close_lines(Lines) ->
     close_lines_nif(Lines).
@@ -117,6 +147,32 @@ close_lines_nif(_Lines) ->
     erlang:nif_error(not_loaded).
 
 
+%% @doc Open a set of lines for montoring.
+%%
+%% The lines to be opened are specified through the `Offsets' parameter, for
+%% example to open the 16th, 20th and 21st lines Offsets would be `[16, 20, 21]'.
+%% these offsets are board and system specific.
+%%
+%% The `Flags' allow specifying the active state as well as the drive mode.
+%% 
+%% The `EventFlags' allow specifying how events are detected.
+%%
+%% The `ConsumerLabel' should be an ASCII string of the application name. This
+%% string will be truncated to 31 characters.
+%% 
+%% Upon opening the lines for monitoring, the owning process will start
+%% receiving messages in the form of:
+%%
+%% ```
+%%      {gpio, LineEventsHandle, {event, Timestamp, Type}}
+%% '''
+%% 
+%% Where `LineEventsHandle' is the handle returned by this function, `Timestamp'
+%% is best estimate of time of event occurrence, in nanoseconds and `Type' is
+%% one of `rising_edge' or `falling_edge'.
+%% 
+%% Returns a {@link lines(). handle} that can be used for ending the lines
+%% monitoring using {@link close_line_events/1}.
 -spec open_line_events(chip(), Offset, [Flag], [EventFlag], ConsumerLabel) -> {ok, line_events()} | {error, term()} when
     Offset :: non_neg_integer(),
     Flag :: active_low | open_drain | open_source,
@@ -166,6 +222,7 @@ read_line_events_nif(_LineEvents, _Ref) ->
     erlang:nif_error(not_loaded).
 
 
+%% @doc Close a previously opened line events.
 -spec close_line_events(line_events()) -> ok | {error, term()}.
 close_line_events({LineEvents, Receiver}) ->
     case is_process_alive(Receiver) of
