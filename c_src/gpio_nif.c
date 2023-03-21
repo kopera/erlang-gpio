@@ -12,6 +12,10 @@
 #include <erl_nif.h>
 #include <linux/gpio.h>
 
+#ifndef GPIO_MAX_NAME_SIZE
+#define GPIO_MAX_NAME_SIZE 32
+#endif
+
 #define ARRAY_LENGTH(x) \
     ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
 
