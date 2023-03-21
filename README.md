@@ -12,7 +12,7 @@ You need to add `gpio` as a dependency to your project. If you are using
 
 ```erlang
 {deps, [
-    {gpio, "0.6.2"}
+    {gpio, "0.6.3"}
 ]}.
 ```
 
