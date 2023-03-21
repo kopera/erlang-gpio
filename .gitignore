@@ -1,4 +1,5 @@
 /_build
 /_checkouts
+/c_src/_build
 /doc
 /priv/gpio_nif.so
