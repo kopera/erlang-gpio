@@ -89,7 +89,7 @@ The following will monitor the pin `IO10` (`GPIO3_I10`) for rising values
 (changes from 0 to 1).
 
 ```erlang
-> {ok, LineEvents} = gpio:open_line_events(Chip, 10, [input], [rising_edge], "my-application").
+> {ok, LineEvents} = gpio:open_line_events(Chip, 10, [], [rising_edge], "my-application").
 {ok, {#Ref<0.3061467712.2848194561.68344>, <0.340.0>}}
 ```
 
