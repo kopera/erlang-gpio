@@ -147,11 +147,10 @@ close_lines_nif(_Lines) ->
     erlang:nif_error(not_loaded).
 
 
-%% @doc Open a set of lines for montoring.
+%% @doc Open a line for montoring.
 %%
-%% The lines to be opened are specified through the `Offsets' parameter, for
-%% example to open the 16th, 20th and 21st lines Offsets would be `[16, 20, 21]'.
-%% these offsets are board and system specific.
+%% The line to be opened is specified through the `Offset' parameter, for
+%% example to open the 16 lines Offset would be `16'.
 %%
 %% The `Flags' allow specifying the active state as well as the drive mode.
 %% 
@@ -168,8 +167,8 @@ close_lines_nif(_Lines) ->
 %% '''
 %% 
 %% Where `LineEventsHandle' is the handle returned by this function, `Timestamp'
-%% is best estimate of time of event occurrence, in nanoseconds and `Type' is
-%% one of `rising_edge' or `falling_edge'.
+%% is best estimate of time of event occurrence in nanoseconds, `Type' is one of
+%% `rising_edge' or `falling_edge'.
 %% 
 %% Returns a {@link lines(). handle} that can be used for ending the lines
 %% monitoring using {@link close_line_events/1}.
